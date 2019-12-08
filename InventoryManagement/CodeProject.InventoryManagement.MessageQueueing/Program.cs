@@ -40,7 +40,7 @@ namespace CodeProject.InventoryManagement.MessageQueueing
 			configuration.GetSection("MessageQueueAppConfig").Bind(messageQueueAppConfig);
 			configuration.GetSection("ConnectionStrings").Bind(connectionStrings);
 			//
-			//	set up sending queue
+			//	set up RabbitMq sending queue
 			//
 			IMessageQueueConnection sendingQueueConnection = new MessageQueueConnection(messageQueueAppConfig);
 			sendingQueueConnection.CreateConnection();
@@ -54,7 +54,7 @@ namespace CodeProject.InventoryManagement.MessageQueueing
 			inventoryReceivedConfiguration.AddQueue(MessageQueueEndpoints.SalesOrderQueue);
 			inventoryReceivedConfiguration.AddQueue(MessageQueueEndpoints.PurchaseOrderQueue);
 			inventoryReceivedConfiguration.AddQueue(MessageQueueEndpoints.LoggingQueue);
-
+            //Declare Queue & Binds
 			inventoryReceivedConfiguration.InitializeOutboundMessageQueueing();
 			messageQueueConfigurations.Add(inventoryReceivedConfiguration);
 			//

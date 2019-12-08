@@ -137,7 +137,7 @@ namespace CodeProject.InventoryManagement.Business.MessageService
 					{
 						break;
 					}
-
+                    //Sending msg to RabbitMQ
 					ResponseModel<MessageQueue> messageQueueResponse = messageQueueConfiguration.SendMessage(message);
 					if (messageQueueResponse.ReturnStatus == true)
 					{
