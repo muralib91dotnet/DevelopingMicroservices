@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using CodeProject.AccountManagement.WebApi.ActionFilters;
 using CodeProject.AccountManagement.Interfaces;
 using CodeProject.AccountManagement.BusinessServices;
+using CodeProject.SalesOrderManagement.WebApi.SignalRHub;
 
 namespace CodeProject.AccountManagement.WebApi
 {
@@ -38,20 +39,30 @@ namespace CodeProject.AccountManagement.WebApi
 		/// <param name="services"></param>
 		public void ConfigureServices(IServiceCollection services)
         {
-          
-			CorsPolicyBuilder corsBuilder = new CorsPolicyBuilder();
 
-			corsBuilder.AllowAnyHeader();
-			corsBuilder.AllowAnyMethod();
-			corsBuilder.AllowAnyOrigin();
-			corsBuilder.AllowCredentials();
+            //CorsPolicyBuilder corsBuilder = new CorsPolicyBuilder();
 
-			services.AddCors(options =>
-			{
-				options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
-			});
+            //corsBuilder.AllowAnyHeader();
+            //corsBuilder.AllowAnyMethod();
+            //corsBuilder.AllowAnyOrigin();
+            //corsBuilder.AllowCredentials();
 
-			ConnectionStrings connectionStrings = new ConnectionStrings();
+            //services.AddCors(options =>
+            //{
+            //	options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("SiteCorsPolicy", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3200", "http://localhost:3400")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
+            ConnectionStrings connectionStrings = new ConnectionStrings();
 			Configuration.GetSection("ConnectionStrings").Bind(connectionStrings);
 
 			services.AddDbContext<AccountManagementDatabase>(options => options.UseSqlServer(Configuration.GetConnectionString("PrimaryDatabaseConnectionString")));
@@ -81,6 +92,8 @@ namespace CodeProject.AccountManagement.WebApi
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSignalR();
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +115,11 @@ namespace CodeProject.AccountManagement.WebApi
 			app.UseHttpsRedirection();
 
 			app.UseMvc();
-		}
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessageQueueHub>("/messageQueueHub");
+            });
+        }
     }
 }
