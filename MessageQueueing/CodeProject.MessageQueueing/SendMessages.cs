@@ -48,12 +48,13 @@ namespace CodeProject.MessageQueueing
 			_signalRQueue = signalRQueue;
 		}
 
-		/// <summary>
-		/// Start Process Interval
-		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
-		public Task StartAsync(CancellationToken cancellationToken)
+        /// <summary>
+        /// IHostedService Lifecycle method, similar to OnInit
+        /// Start Process Interval
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task StartAsync(CancellationToken cancellationToken)
 		{
 
 			StartSignalRConnection();
@@ -93,8 +94,10 @@ namespace CodeProject.MessageQueueing
 
 			}
 			
+            //Receives msg from SignalR Hub, init'd in Inventorymanagement WebAPI
 			_signalRHubConnection.On<string>(_signalRQueue, (message) =>
 			{
+                //sends the msg to RabbitMQ
 				this.GetMessagesInQueue(null);
 
 			});
@@ -127,13 +130,13 @@ namespace CodeProject.MessageQueueing
 		
 
 		}
-		/// <summary>
+        /// <summary>
 
-		/// <summary>
-		/// Get Messages In Queue
-		/// </summary>
-		/// <param name="state"></param>
-		private async void GetMessagesInQueue(object state)
+        /// <summary>
+        /// Get Messages In Queue, & sends the msg to RabbitMQ
+        /// </summary>
+        /// <param name="state"></param>
+        private async void GetMessagesInQueue(object state)
 		{
 			ResponseModel<List<MessageQueue>> messages = await _messageProcessor.SendQueueMessages(_messageQueueConfigurations, _appConfig.OutboundSemaphoreKey, _connectionStrings);
 			Console.WriteLine("total messages " + messages.Entity.Count.ToString() + " sent at " + DateTime.Now);

@@ -41,6 +41,7 @@ namespace CodeProject.MessageQueueing
 		}
 
 		/// <summary>
+        /// IHostedService Lifecycle method, similar to OnInit
 		/// Start Processing Interval
 		/// </summary>
 		/// <param name="cancellationToken"></param>

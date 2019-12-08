@@ -59,7 +59,7 @@ namespace CodeProject.MessageQueueing
 			_channel = _messageQueueConnection.GetConnection().CreateModel();
 
 			string queue = queueName + "_" + _messageQueueAppConfig.MessageQueueEnvironment;
-
+            //NOTE: Exchangeless queues
 			_channel.QueueDeclare(queue, true, false, false);
 
 			var response = _channel.QueueDeclarePassive(queue);
@@ -128,11 +128,11 @@ namespace CodeProject.MessageQueueing
 			return _subscription;
 		}
 
-		/// <summary>
-		/// Send Message
-		/// </summary>
-		/// <param name="entity"></param>
-		public ResponseModel<MessageQueue> SendMessage(MessageQueue entity)
+        /// <summary>
+        /// Method that Sending msg to RabbitMQ
+        /// </summary>
+        /// <param name="entity"></param>
+        public ResponseModel<MessageQueue> SendMessage(MessageQueue entity)
 		{
 			ResponseModel<MessageQueue> response = new ResponseModel<MessageQueue>();
 			response.Entity = new MessageQueue();
@@ -145,6 +145,7 @@ namespace CodeProject.MessageQueueing
 
 				string exchangeName = _exchangeName + "_" + _messageQueueAppConfig.MessageQueueEnvironment;
 
+                //NOTE: PublicationAddress obj being used, to send the msgs to the required Queue
 				PublicationAddress address = new PublicationAddress(ExchangeType.Fanout, exchangeName, _messageQueueAppConfig.RoutingKey);
 
 				_channel.BasicPublish(address, _basicProperties, payload);

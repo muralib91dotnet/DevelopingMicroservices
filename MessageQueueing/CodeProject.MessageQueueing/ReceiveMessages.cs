@@ -39,12 +39,13 @@ namespace CodeProject.MessageQueueing
 			_appConfig = appConfig;
 		}
 
-		/// <summary>
-		/// Start
-		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
-		public Task StartAsync(CancellationToken cancellationToken)
+        /// <summary>
+        /// IHostedService Lifecycle method, similar to OnInit
+        /// Start
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task StartAsync(CancellationToken cancellationToken)
 		{
 			Console.WriteLine("Starting Receiving Messages");
 
