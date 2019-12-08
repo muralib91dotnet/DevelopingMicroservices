@@ -1,4 +1,5 @@
-dotnet build SpawnProcesses\SpawnProcesses
+dotnet build "D:\GitHub\DevelopingMicroservicesMJCaplin\Support\SpawnProcesses\SpawnProcesses\SpawnProcesses.csproj"
+REM @echo off
 dotnet build ..\AccountManagement\CodeProject.AccountManagement.WebApi
 dotnet build ..\InventoryManagement\CodeProject.InventoryManagement.MessageQueueing
 dotnet build ..\InventoryManagement\CodeProject.InventoryManagement.WebApi
@@ -8,4 +9,5 @@ dotnet build ..\PurchaseOrderManagement\CodeProject.PurchaseOrderManagement.WebA
 dotnet build ..\SalesOrderManagement\CodeProject.SalesOrderManagement.MessageQueueing
 dotnet build ..\SalesOrderManagement\CodeProject.SalesOrderManagement.WebApi
 
+REM @echo on
 pause

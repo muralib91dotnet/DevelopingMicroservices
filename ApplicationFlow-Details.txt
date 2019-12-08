@@ -1,0 +1,43 @@
+Ref: https://www.codeproject.com/Articles/1267590/Developing-Microservices-with-NET-Core-2-1-RabbitM
+
+Each microservice will have a separate background process for sending, receiving and processing message queue messages.
+	Above said 3 message queuing services/processes will implement IHostedService & run as background service
+	
+Each background message queuing service will run in a separate multithreaded console application and will interact directly with RabbitMQ.
+
+Each message queue message will have a unique transaction ID to uniquely identify each message and to prevent the processing of the same message more than once.
+Each transaction will be processed in sequential order of creation (transaction ID) to help maintain data integrity. Depending on the nature of the transactions of your application, this may not be a requirement.
+
+A SignalR context will also be injected through the constructor, in all web API constructors
+
+Full Application flow:
+Article sub-title: Sample Application Walkthrough
+
+
+Program flow:
+1. After Program.cs ends
+2. StartAsync of SendMessages.cs gets called
+3. StartAsync of ProcessMessages.cs gets called
+4. 1st Function in StartAsync of SendMessages gets called
+5. 1st Function in StartAsync of ProcessMessages gets called
+6. StartAsync of ReceiveMessages.cs gets called
+7. Function/Timer callback fn in StartAsync of ReceiveMessages gets called
+8. Timer callback fn in StartAsync of SendMessages gets called
+9. Timer callback fn in StartAsync of ProcessMessages gets called
+10. Timer callback fn in StartAsync of ProcessMessages gets called, again repeatedly at configured Timer intervals	
+11. Timer callback fn in StartAsync of SendMessages gets called, again repeatedly at configured Timer intervals	
+12. Timer callback fn in StartAsync of ReceiveMessages gets called, again repeatedly at configured Timer intervals	
+
+Program flow with one business-case & Actual Tx:
+Article sub-title: Shipping Product 
+For this article, we will walk through the process of shipping product on a sales order to a customer. The walk through will cover key points of interest from both the .NET Core 2.1 Web API and the back-end .NET Core 2.1 Message Queuing Services and it's interaction with RabbitMQ.
+
+TODO:
+check how Microservices communicate by RabbitMQ Queues, as explained in the article. 
+Eg: Logging Message Queuing Service will send an acknowledgement message to the Inventory Management queue(to reduce one item qty in inventory), after sales order processed with Shipped Qty
+
+
+
+
+Other NOTEs:
+Here every inbound/outbound transaction are logged manually in db, tracking every transaction Id, which can be handled by tools like Seq in TOil
